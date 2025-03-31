@@ -1,1 +1,8 @@
+# environment variables
 .env
+
+# Local jupyter notebook files
+notebook/test_to_sql.ipynb
+
+# docker 
+mysql_db 
