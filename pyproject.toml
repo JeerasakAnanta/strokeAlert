@@ -1,19 +1,23 @@
 [tool.poetry]
 name = "strokealert"
 version = "0.1.0"
-description = "stroke Alert prototype"
+description = "Stroke Alert Prototype"
 authors = ["Game <jeerasakananta@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 
-python = "^3.12"
-langchain="0.3.21"
-openai="1.69.0"
-fastapi="0.115.12"
-uvicorn="0.34.0"
-requests="2.32.3"
-python-dotenv="1.1.0"
+python = "^3.12"                  # Python version 
+langchain = "0.3.21"              # LangChain framework 
+openai = "1.69.0"                 # OpenAI API    
+fastapi = "0.115.12"              # fastapi framewor
+uvicorn = "0.34.0"                # uvicorn server
+requests = "2.32.3"               # http requests 
+python-dotenv = "1.1.0"           # environment variables python
+langchain-qdrant = "0.2.0"        # Qdrant vectorstore
+langchain-openai = "0.3.12"       # OpenAI
+mysql-connector-python = "^9.2.0" # MySQL connector
+
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
