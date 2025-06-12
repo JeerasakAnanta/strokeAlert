@@ -16,7 +16,9 @@ load_dotenv()
 
 # LINE API Credentials
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET", "YOUR_LINE_CHANNEL_SECRET")
-LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", "YOUR_LINE_ACCESS_TOKEN")
+LINE_CHANNEL_ACCESS_TOKEN = os.getenv(
+    "LINE_CHANNEL_ACCESS_TOKEN", "YOUR_LINE_ACCESS_TOKEN"
+)
 
 # OpenAI API Key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -25,23 +27,30 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 app = FastAPI()
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 # OpenAI Client
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
+
 def verify_signature(request_body: str, signature: str) -> bool:
     """Verify that the request comes from LINE using HMAC SHA256."""
-    hash_mac = hmac.new(LINE_CHANNEL_SECRET.encode("utf-8"), request_body.encode("utf-8"), hashlib.sha256).digest()
+    hash_mac = hmac.new(
+        LINE_CHANNEL_SECRET.encode("utf-8"),
+        request_body.encode("utf-8"),
+        hashlib.sha256,
+    ).digest()
     expected_signature = base64.b64encode(hash_mac).decode("utf-8")
     return hmac.compare_digest(expected_signature, signature)
+
 
 @app.post("/webhook")
 async def line_webhook(request: Request):
     """Handle incoming webhook requests from LINE Messaging API."""
     signature = request.headers.get("X-Line-Signature")
     request_body = await request.body()
-
 
     # Verify the request signature
     if not verify_signature(request_body.decode("utf-8"), signature):
@@ -69,43 +78,50 @@ async def line_webhook(request: Request):
                 # Reply to user
                 await reply_to_user(reply_token, chatgpt_response)
 
-    return JSONResponse(content={"status": "success", "message": "Webhook received"}, status_code=200)
+    return JSONResponse(
+        content={"status": "success", "message": "Webhook received"}, status_code=200
+    )
+
 
 async def get_chatgpt_response(user_message: str) -> str:
     """Send user message to ChatGPT and get a response."""
     try:
         response = openai_client.chat.completions.create(
-            # chatgpt-4o-mint 
-            model="gpt-4o-mini",  
-            messages=[{"role": "system", "content": "You are Thai assistant a helpful and friendly bot  answers questions in Thai language."},
-                      {"role": "user", "content": user_message}]
+            # chatgpt-4o-mint
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are Thai assistant a helpful and friendly bot  answers questions in Thai language.",
+                },
+                {"role": "user", "content": user_message},
+            ],
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
         logging.error(f"OpenAI API error: {str(e)}")
         return "I'm sorry, I couldn't process your request."
 
+
 async def reply_to_user(reply_token: str, text: str):
     """Reply to user using LINE Messaging API."""
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}"
+        "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}",
     }
 
-    payload = {
-        "replyToken": reply_token,
-        "messages": [{"type": "text", "text": text}]
-    }
+    payload = {"replyToken": reply_token, "messages": [{"type": "text", "text": text}]}
 
-    response = requests.post("https://api.line.me/v2/bot/message/reply", json=payload, headers=headers)
+    response = requests.post(
+        "https://api.line.me/v2/bot/message/reply", json=payload, headers=headers
+    )
 
     if response.status_code == 200:
         logging.info("Reply sent successfully!")
     else:
         logging.error(f"Failed to send reply: {response.text}")
 
+
 # Run the FastAPI server
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
-
-

@@ -1,25 +1,47 @@
 # Stroke Alert Chatbot Prototype
 
-##  install 
+![image](./docs/image.png)
 
-- install  poetry 
-```bash 
-sudo apt install python3-poetry
+## Requirements  
+- Python 
+- Line Messaging API 
+- (LLM) Openai API
+- Fastapi
+- Langchain 
+- Docker 
+- Ngrok 
+- MySQL database 
+- UV python package manager   
+
+## Setup 
+- clone repo
+```bash  
+https://github.com/JeerasakAnanta/strokeAlert.git
+cd strokeAlert
 ```
 
--  install dependencies with poetry 
+### environment 
+
+- install [uv](https://docs.astral.sh/uv/)  
+```bash 
+# linux and mac  
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+-  create  environment 
 ```bash
-poetry install  
+uv venv
+source venv/bin/activate
 ``` 
 
-- use poetry enronment 
+- update  install package 
 ```bash
-poetry shell
+uv sync 
 ``` 
 
 - run webhook server 
 ```bash
-python3 -m webhook.py
+uv run webhook_rag.py
 ```  
 - webhook server will run on port 8000 by default.
 http://you-ip:8000/webhook
@@ -33,3 +55,4 @@ docker run --net=host -it -e NGROK_AUTHTOKEN="YOUR_NGROK_TOKEN" ngrok/ngrok:late
 ```
 -  ngrok will run on port 8000 by default.
 -  https://YOUR_NGROK.ngrok-free.app
+
