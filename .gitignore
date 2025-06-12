@@ -6,3 +6,9 @@ notebook/test_to_sql.ipynb
 
 # docker 
 mysql_db 
+
+# Dataset 
+data/
+
+# jupyter notebook files 
+*.ipynb
