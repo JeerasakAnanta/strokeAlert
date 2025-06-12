@@ -1,27 +1,19 @@
-[tool.poetry]
+[project]
 name = "strokealert"
 version = "0.1.0"
-description = "Stroke Alert Prototype"
-authors = ["Jeerasak Ananta SS4 <jeerasakananta@gmail.com>"]
+description = "strokealert  prototype"
 readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "docling>=2.36.1",
+    "fastapi>=0.115.12",
+    "ipykernel>=6.29.5",
+    "langchain-community>=0.3.25",
+    "langchain-openai>=0.3.22",
+    "mysql-connector-python>=9.3.0",
+    "openai>=1.86.0",
+    "python-dotenv>=1.1.0",
+    "requests>=2.32.4",
+    "uvicorn>=0.34.3",
+]
 
-[tool.poetry.dependencies]
-
-python = "^3.12"                  # Python version 
-openai = "1.69.0"                 # OpenAI API    
-fastapi = "0.115.12"              # fastapi framewor
-uvicorn = "0.34.0"                # uvicorn server
-requests = "2.32.3"               # http requests 
-python-dotenv = "1.1.0"           # environment variables python
-langchain-openai = "^0.3.12"      # langchain openai
-langchain-community = "^0.3.21"   # langchain community 
-mysql-connector-python = "^9.2.0" # MySQL connector
-
-
-[tool.poetry.group.dev.dependencies]
-ipykernel = "^6.29.5"
-
-[build-system]
-
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
