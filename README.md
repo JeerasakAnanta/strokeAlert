@@ -1,5 +1,7 @@
 # Stroke Alert Chatbot Prototype
 
+![image](./docs/image.png)
+
 ## Requirements  
 - Python 
 - Line Messaging API 
