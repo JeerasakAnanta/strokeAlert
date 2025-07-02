@@ -43,10 +43,11 @@ mysql_user = os.getenv("MYSQL_USER")
 mysql_password = os.getenv("MYSQL_PASSWORD")
 mysql_host = os.getenv("MYSQL_HOST")
 mysql_port = os.getenv("MYSQL_PORT")
-mysql_db = os.getenv("MYSQL_DB")
+mysql_db = os.getenv("MYSQL_DATABASE")
 
 # OpenAI API Key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -62,11 +63,6 @@ openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 # ==================== RAG_SQL Agent ====================
 def sql_agent(user_input: str) -> str:
-    """
-    This function utilizes a LangChain SQL Agent to execute SQL queries
-    against a MySQL database based on the user's input.
-    """
-    # Create MySQL database URI
     db_uri = f"mysql+mysqlconnector://{mysql_user}:{mysql_password}@{mysql_host}:{mysql_port}/{mysql_db}"
 
     try:
@@ -74,15 +70,11 @@ def sql_agent(user_input: str) -> str:
     except Exception as e:
         return f"[ERROR] Failed to connect to the database: {str(e)}"
 
-    # Initialize LLM and Agent
-    llm = OpenAI(temperature=0)  # Use the fixed model name "gpt-4"
-    toolkit = SQLDatabaseToolkit(db=db, llm=llm)
-    agent_executor = create_sql_agent(llm=llm, toolkit=toolkit, verbose=True)
-
-    # Execute user query and return results
     try:
-        result = agent_executor.run(user_input)
-        return result
+        llm = ChatOpenAI(model="gpt-4", temperature=0)
+        toolkit = SQLDatabaseToolkit(db=db, llm=llm)
+        agent_executor = create_sql_agent(llm=llm, toolkit=toolkit, verbose=True)
+        return agent_executor.run(user_input)
     except Exception as e:
         return f"[ERROR] {str(e)}"
 
