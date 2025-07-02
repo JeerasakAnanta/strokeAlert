@@ -1,4 +1,6 @@
-# dev by jeerasak anant
+# dev by jeerasak ananta ss4
+# last update 02/07/2025
+
 import os
 
 # FastAPI server
@@ -21,7 +23,7 @@ from openai import OpenAI
 # langchain
 from langchain.agents import create_sql_agent
 from langchain.agents.agent_toolkits import SQLDatabaseToolkit
-from langchain.utilities import SQLDatabase
+from langchain_community.utilities import SQLDatabase
 from langchain.llms import OpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
@@ -29,6 +31,7 @@ from langchain_openai import ChatOpenAI
 # Load environment variables from .env file
 from dotenv import load_dotenv
 
+# load env
 load_dotenv()
 
 
@@ -186,39 +189,6 @@ async def line_webhook(request: Request):
     return JSONResponse(
         content={"status": "success", "message": "Webhook received"}, status_code=200
     )
-
-
-async def get_sqlchat_response(user_message: str) -> str:
-    """
-    Sends user messages to the ChatGPT model and retrieves a response.
-    """
-    try:
-        sql_result = sql_agent(user_message)
-        output_assistant_agent = assistant_agent(sql_result)
-        return output_assistant_agent
-    except Exception as e:
-        logging.error(f"error: {str(e)}")
-        return "I'm sorry, I couldn't process your request."
-
-
-async def reply_to_user(reply_token: str, text: str):
-    """
-    Sends a reply to the user through the LINE Messaging API.
-    """
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}",
-    }
-    payload = {"replyToken": reply_token, "messages": [{"type": "text", "text": text}]}
-    response = requests.post(
-        "https://api.line.me/v2/bot/message/reply", json=payload, headers=headers
-    )
-
-    if response.status_code == 200:
-        logging.info("Reply sent successfully!")
-    else:
-        logging.error(f"Failed to send reply: {response.text}")
-
 
 # Run the FastAPI server
 if __name__ == "__main__":
