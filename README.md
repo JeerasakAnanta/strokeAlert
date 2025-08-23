@@ -1,4 +1,7 @@
 # Stroke Alert Chatbot Prototype
+- this is a prototype for a chatbot that alerts users about potential stroke symptoms. 
+- for Nana hospital 
+
 
 ![image](./docs/image.png)
 
@@ -14,7 +17,7 @@
 - UV python package manager   
 
 ## Setup 
-- clone repo
+- Clone repo
 ```bash  
 https://github.com/JeerasakAnanta/strokeAlert.git
 cd strokeAlert
